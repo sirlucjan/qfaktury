@@ -128,7 +128,9 @@ Wykonujemy pobranie katalogu z plikami w wybranej przez siebie ścieżce i wpisu
 ```
 git clone -b KF5 https://github.com/juliagoda/qfaktury.git
 cd qfaktury
-qmake
+mkdir zbudowane
+cd zbudowane
+cmake ..
 make
 sudo make install
 ```
