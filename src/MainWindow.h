@@ -21,6 +21,7 @@ class QTimer;
 class QAction;
 class Invoice;
 
+// class for creating main window with menu, toolbar, calendar and table widget
 class MainWindow : public KXmlGuiWindow {
 
   Q_OBJECT
@@ -30,7 +31,8 @@ public:
   ~MainWindow();
   static void insertRow(QTableWidget *t, int row);
   void newInvoice(Invoice *invoice, QString windowTitle);
-  const int getMaxSymbol();
+  int getMaxSymbol() const;
+  int getMaxSymbolWarehouse() const;
   static MainWindow *instance();
   static bool shouldHidden;
 
@@ -39,15 +41,21 @@ private slots:
   void createBackup();
   void loadBackup();
   void sendEmailToBuyer();
+  void on_WZAction_triggered();
+  void on_RWAction_triggered();
+
 
 public slots:
 
   void tableClear(QTableWidget *tab);
   void tabChanged();
   void rereadHist(bool if_clicked);
+  void rereadWarehouses(bool);
   void aboutProg();
   void editFHist();
+  void warehouseEdit();
   void delFHist();
+  void delMHist();
   void userDataClick();
   void settClick();
   void buyerClick();
@@ -70,6 +78,7 @@ public slots:
   void showTableMenuT(QPoint p);
   void showTableMenuK(QPoint p);
   void showTableMenuH(QPoint p);
+  void showTableMenuM(QPoint p);
   void pluginSlot();
   void pluginInfoSlot();
   void keyPressEvent(QKeyEvent *event);
@@ -91,12 +100,16 @@ protected:
 private:
   IDataLayer *dl;
   Ui::MainWindow *ui;
+  QWidget *windBack;
+  QLineEdit *fileComboBox;
+  QLineEdit *directoryComboBox;
 
   QVector<QAction *> plugActions;
   QString workingDir;
   QMap<int, QString> customActions;
   QTimer *timer;
   QList<int> allSymbols;
+  QList<int> allSymbolsWarehouse;
   QWidget *windowTask;
   QPushButton *cancelTaskBtn;
   QPushButton *addTaskBtn;
@@ -110,6 +123,7 @@ private:
   void saveAllSettAsDefault();
   void setupDir();
   void readHist();
+  void readWarehouses();
   void readBuyer();
   void readGoods();
   void categorizeYears();

@@ -17,6 +17,8 @@
 
 #include "config.h"
 
+// class for settings and holding directory paths
+
 // #define trUtf8(x) QObject::aaa(x)
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
@@ -32,10 +34,10 @@ public:
 #ifdef Q_OS_LINUX
   QString appPath = "/usr/share/qfaktury";
 #endif
-// Probably
-// QStandardPaths::standardLocations(QStandardPaths::AppDataLocation).at(1)
-// returns different values on different distributions, for me that was
-// /usr/share/<APPNAME>
+  // Probably
+  // QStandardPaths::standardLocations(QStandardPaths::AppDataLocation).at(1)
+  // returns different values on different distributions, for me that was
+  // /usr/share/<APPNAME>
 
 #ifdef Q_OS_WIN32
   QString appPath = QDir::homePath() + "/AppData/Roaming/qfaktury";
@@ -103,11 +105,18 @@ public:
     if (value("editName").toString().compare("") == 0)
       setValue("editName", "false");
     if (value("filtrEnd").toString().compare("") == 0)
-      setValue("filtrEnd", QDate::currentDate().toString(Qt::ISODate));
+      setValue("filtrEnd", QDate(QDate::currentDate().year(), 12, 31));
     if (value("filtrStart").toString().compare("") == 0)
-      setValue("filtrStart", QDate::currentDate().toString(Qt::ISODate));
+      setValue("filtrStart", QDate(QDate::currentDate().year(), 1, 1));
+    if (value("filtrEndWarehouse").toString().compare("") == 0)
+      setValue("filtrEndWarehouse", QDate(QDate::currentDate().year(), 12, 31));
+    if (value("filtrStartWarehouse").toString().compare("") == 0)
+      setValue("filtrStartWarehouse",
+               QDate(QDate::currentDate().year(), 1, 1));
     if (value("firstrun").toString().compare("") == 0)
       setValue("firstrun", false);
+    if (value("firstRunGUS").toString().compare("") == 0)
+      setValue("firstRunGUS", false);
     if (value("units").toString().compare("") == 0)
       setValue("units", tr("szt|kg|g|m|km|godz|ar|bochenek|btl|cal|doba|egz|"
                            "filiżanka|fracht|GJ|hektar|karton|kpl|kopia|kurs|"
@@ -401,8 +410,14 @@ public:
     setValue("editName", "false");
     setValue("editSymbol", "true");
     setValue("numberOfCopies", 1);
-    setValue("filtrStart", QDate::currentDate().toString(getDateFormat()));
+    setValue("filtrStart", QDate(QDate::currentDate().year(), 1, 1));
+    setValue("filtrEnd", QDate(QDate::currentDate().year(), 12, 31));
+    setValue("filtrStartWarehouse",
+             QDate(QDate::currentDate().year(), 1, 1));
+    setValue("filtrEndWarehouse",
+             QDate(QDate::currentDate().year(), 12, 31));
     setValue("firstrun", false);
+    setValue("firstRunGUS", false);
     setValue("units", tr("szt|kg|g|m|km|godz|ar|bochenek|btl|cal|doba|egz|"
                          "filiżanka|fracht|GJ|hektar|karton|kpl|kopia|kurs|kWh|"
                          "l|mb|msc|mila|mtg|MWh|m2|m3|opak|puszka|rolka|"
@@ -512,6 +527,10 @@ public:
     setValue("userphone", "true");
     setValue("usermail", "true");
     setValue("userwww", "true");
+    setValue("userbank", "true");
+    setValue("userkrs", "true");
+    setValue("userfax", "true");
+    setValue("userswift", "true");
     setValue("clientnazwa", "true");
     setValue("clientmiejscowosc", "true");
     setValue("clientadres", "true");
@@ -520,6 +539,10 @@ public:
     setValue("clientphone", "true");
     setValue("clientmail", "true");
     setValue("clientwww", "true");
+    setValue("clientbank", "true");
+    setValue("clientkrs", "true");
+    setValue("clientfax", "true");
+    setValue("clientswift", "true");
     endGroup();
 
     beginGroup("printkontr");
@@ -612,10 +635,28 @@ public:
     return QString("/invoices");
   }
 
+  QString getWarehouseDir() {
+
+    // Changed name of the folder to avoid overwriting the files.
+    // This may require conversion script.
+    return QString("/warehouse");
+  }
+
   // return invoices dir
   QString getInvoicesDir() {
     return QString(getWorkingDir() + getDataDir() + "/");
   }
+
+  // return warehouse dir
+  QString getWarehouseFullDir() {
+    return QString(getWorkingDir() + getWarehouseDir() + "/");
+  }
+
+  // return gus dir
+  QString getGUSDir() {
+    return QString(getWorkingDir() + "/gus");
+  }
+
 
   // return customers xml
   QString getCustomersXml() {
@@ -627,8 +668,11 @@ public:
     return QString(getWorkingDir() + "/products.xml");
   }
 
-  // returns inoice doc name stored as a DOCTYPE
+  // returns invoice doc name stored as a DOCTYPE
   QString getInoiveDocName() { return QString("invoice"); }
+
+  // returns warehouse doc name stored as a DOCTYPE
+  QString getWarehouseDocName() { return QString("warehouse"); }
 
   // returns correction doc name stored as a DOCTYPE
   QString getCorrDocName() { return QString("correction"); }

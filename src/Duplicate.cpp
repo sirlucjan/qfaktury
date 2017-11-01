@@ -10,9 +10,14 @@
 // constructor
 Duplicate::Duplicate(QWidget *parent, IDataLayer *dl, QString in_form,
                      bool ifEdited)
-    : Invoice(parent, dl, in_form), editMode(ifEdited) {}
+    : Invoice(parent, dl, in_form), editMode(ifEdited) {
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+}
 
 Duplicate::~Duplicate() {
+
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   if (labelDupDate != 0)
     labelDupDate = 0;
   delete labelDupDate;
@@ -24,16 +29,17 @@ Duplicate::~Duplicate() {
 
 void Duplicate::duplicateInit() {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   labelDupDate = new QLabel(this);
   labelDupDate->setText(trUtf8("Data duplikatu:"));
   labelDupDate->setAlignment(Qt::AlignRight);
   addDataLabels->addWidget(labelDupDate);
 
-  duplicateDate = new KDateComboBox(this);
+  duplicateDate = new QDateEdit(this);
   duplicateDate->setObjectName(QString::fromUtf8("duplicateDate"));
-  //  duplicateDate->setCalendarPopup(true);
-  duplicateDate->setDisplayFormat(QLocale::ShortFormat);
-  // duplicateDate->setDisplayFormat(sett().getDateFormat());
+  duplicateDate->setCalendarPopup(true);
+  duplicateDate->setDisplayFormat(sett().getDateFormat());
 
   if (!editMode) {
 
@@ -54,6 +60,8 @@ void Duplicate::duplicateInit() {
 }
 
 void Duplicate::setData(InvoiceData &invData) {
+
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
 
   invData.id = getfName();
   invData.customer = buyerName->text();
@@ -132,6 +140,8 @@ void Duplicate::setData(InvoiceData &invData) {
 void Duplicate::makeInvoiceHeadar(bool sellDate, bool breakPage,
                                   bool original) {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   QString breakPageStr = "class=\"page_break\"";
 
   if (breakPage == false)
@@ -192,6 +202,8 @@ void Duplicate::makeInvoiceHeadar(bool sellDate, bool breakPage,
 
 void Duplicate::canQuit() {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   if (canClose) {
 
     qDebug("if canClose true");
@@ -201,8 +213,8 @@ void Duplicate::canQuit() {
 
     if (QMessageBox::warning(
             this, "QFaktury",
-            trUtf8("Dane zostały zmienione czy chcesz zapisać?"), trUtf8("Tak"),
-            trUtf8("Nie"), 0, 0, 1) == 1) {
+            trUtf8("Dane zostały zmienione. Czy chcesz zapisać?"),
+            trUtf8("Tak"), trUtf8("Nie"), 0, 0, 1) == 1) {
 
       saveColumnsWidth();
       reject();

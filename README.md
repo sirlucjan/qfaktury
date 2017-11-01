@@ -2,11 +2,13 @@
 
 
 1. [Opis](#opis)  
-2. [Wymagania](#wymagania)
-3. [Instalacja](#instalacja)  
-4. [Rozwój](#rozwój)  
-5. [Uwagi](#uwagi)  
-6. [Zgłaszanie błędów](#zgłaszanie-błędów)  
+2. [Wymagania](#wymagania)  
+3. [Instalacja zależności](#instalacja-zależności)  
+4. [Instalacja](#instalacja)  
+5. [Usuwanie](#usuwanie)  
+6. [Rozwój](#rozwój)  
+7. [Uwagi](#uwagi)  
+8. [Zgłaszanie błędów](#zgłaszanie-błędów)  
 
 <br/>
 <br/>
@@ -27,6 +29,8 @@ Stale rozwijana aplikacja do obsługi faktur. Aktualnie pozwala na zapis, edycj�
 - stworzenie i wczytywanie kopii zapasowej plików konfiguracyjnych oraz głównego katalogu
 - dodanie kolejnych sprzedawców/oddziałów
 - wysłanie e-mail do kontrahentów z możliwością korzystania z gotowych szablonów
+- wystawianie dokumentów RW, WZ
+- korzystanie z danych Głównego Urzędu Statystycznego z podaniem numeru NIP
 
 
 <br/>
@@ -39,8 +43,79 @@ Stale rozwijana aplikacja do obsługi faktur. Aktualnie pozwala na zapis, edycj�
 - biblioteka Qt w wersji wyższej lub równej 5.0.0
 - paczki qt5-base qt5-webengine (dla modułów Qt GUI, Qt Core, Qt Widgets, Qt Print Support, Qt XML, Qt WebEngine, Qt Network)
 - paczki kwidgetsaddons, kxmlgui, ki18n, kcoreaddons, karchive (dla modułów KF5 - KCoreAddons, KXmlGui, KI18n, KWidgetsAddons, KArchive)
+- cmake w wersji 3.9 lub wyższej (wymagane dla kompilacji)
+- extra-cmake-modules w wersji 1.7.0 lub nowszej (wymagane dla kompilacji)
 - połączenie z internetem (opcjonalne)
 - aktualny czas systemowy (opcjonalne)
+
+<br/>
+<br/>
+
+
+## Instalacja zależności
+
+# Arch Linux
+
+```
+sudo pacman -S gksu php cmake qt5-base qt5-webengine extra-cmake-modules kwidgetsaddons kxmlgui ki18n kcoreaddons karchive
+```
+
+# Ubuntu
+
+```
+sudo apt-get install -y language-pack-en-base
+sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.1 php7.1-common cmake gksu qtbase5-dev qtwebengine5-dev extra-cmake-modules libkf5widgetsaddons-dev libkf5xmlgui-dev libkf5i18n-dev libkf5coreaddons-dev libkf5archive-dev
+```
+
+lub 
+
+```
+sudo apt-get install software-properties-common python-software-properties
+sudo apt-get install php7.1 php7.1-common cmake gksu qtbase5-dev qtwebengine5-dev extra-cmake-modules libkf5widgetsaddons-dev libkf5xmlgui-dev libkf5i18n-dev libkf5coreaddons-dev libkf5archive-dev
+```
+
+# Debian Jessie
+
+```
+sudo apt-get install apt-transport-https lsb-release ca-certificates
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+sudo apt-get update
+sudo apt get install php7.1 cmake gksu qtbase5-dev qtwebengine5-dev extra-cmake-modules libkf5widgetsaddons-dev libkf5xmlgui-dev libkf5i18n-dev libkf5coreaddons-dev libkf5archive-dev
+```
+
+# Debian Sid
+
+```
+sudo apt get install php7.1 cmake gksu qtbase5-dev qtwebengine5-dev extra-cmake-modules libkf5widgetsaddons-dev libkf5xmlgui-dev libkf5i18n-dev libkf5coreaddons-dev libkf5archive-dev
+```
+
+# Fedora
+
+```
+wget http://rpms.remirepo.net/fedora/remi-release-25.rpm
+sudo dnf install remi-release-25.rpm
+sudo dnf install dnf-plugins-core
+sudo dnf config-manager --set-enabled remi-php71
+sudo dnf install cmake beesu qt5-qtbase-devel qt5-qtwebengine-devel extra-cmake-modules kf5-kwidgetsaddons kf5-kxmlgui kf5-ki18n kf5-kcoreaddons kf5-karchive
+```
+
+# OpenSUSE
+
+```
+sudo zypper in php7 php7-devel cmake gksu libgksu libqt5-qtbase libqt5-qtwebengine extra-cmake-modules libKF5WidgetsAddons5 libKF5XmlGui5 libKF5I18n5 libKF5CoreAddons5 libKF5Archive5
+```
+
+# Linux Mint
+
+```
+sudo apt-get install -y language-pack-en-base
+sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.1 cmake gksu qtbase5-dev qtwebengine5-dev extra-cmake-modules libkf5widgetsaddons-dev libkf5xmlgui-dev libkf5i18n-dev libkf5coreaddons-dev libkf5archive-dev
+```
 
 <br/>
 <br/>
@@ -57,6 +132,27 @@ qmake
 make
 sudo make install
 ```
+
+Jeśli posiadasz Arch Linux bądź pokrewny system (Manjaro) możesz wykonać poniższe kroki:
+
+```
+git clone https://github.com/archlinux-lucjan/archlinux-poland.git
+cd qfaktury-qt5-git
+makepkg -sric
+```
+
+<br/>
+<br/>
+
+## Usuwanie
+
+W zbudowanym katalogu:
+
+`cat install_manifest.txt | sudo xargs rm`
+
+lub (w Arch Linux), jeśli instalacja nastąpiła z PKGBUILD:
+
+`sudo pacman -Rns qfaktury-qt5-git`
 
 <br/>
 <br/>

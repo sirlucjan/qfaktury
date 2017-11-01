@@ -1,17 +1,20 @@
+#include "MainWindow.h"
+#include "Settings.h"
+
 #include <KAboutData>
 #include <KLocalizedString>
-#include <QApplication>
 #include <QCommandLineParser>
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QResource>
 #include <QSplashScreen>
 #include <QStyle>
 #include <QTimer>
 
-#include "MainWindow.h"
-#include "Settings.h"
-
 int main(int argc, char **argv) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QApplication a(argc, argv);
 
   KLocalizedString::setApplicationDomain("mainwindow_ui");
@@ -73,7 +76,7 @@ int main(int argc, char **argv) {
   // gets geometry of the screen
   QRect screen = QApplication::desktop()->screenGeometry();
 
-  // sets start window during application load
+  /// sets start window during application load
   QSplashScreen splash(QPixmap(":/res/icons/splash.png"));
 
   // creates instance of main window and move it in according to the screen

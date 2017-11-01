@@ -1,18 +1,24 @@
+#include "Setting.h"
+#include "Settings.h"
 
 #include <QFileDialog>
 #include <QSignalMapper>
 
-#include "Setting.h"
-#include "Settings.h"
-
 Setting::Setting(QWidget *parent) : QDialog(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   setupUi(this);
   init();
 }
 
-Setting::~Setting() {}
+Setting::~Setting() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+}
 
 void Setting::init() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QList<QCheckBox *> settBoxes =
       QList<QCheckBox *>() << cbMonth << cbYear << shortYear << cbEdit
@@ -109,6 +115,8 @@ void Setting::init() {
 
 void Setting::apply() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   saveSettings();
   saveButton->setEnabled(false);
   QMessageBox::information(
@@ -122,6 +130,8 @@ void Setting::apply() {
 
 void Setting::okButtonClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   saveSettings();
   accept();
 }
@@ -129,13 +139,17 @@ void Setting::okButtonClick() {
 /** Slot applyBtn
  */
 
-void Setting::saveBtnEnable() { saveButton->setEnabled(true); }
+void Setting::saveBtnEnable() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  saveButton->setEnabled(true);
+}
 
 /** Slot - set default text
  */
 
 void Setting::defTextBtnClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
   additText->setText(trUtf8("towar odebrałem zgodnie z fakturą"));
 }
 
@@ -144,9 +158,11 @@ void Setting::defTextBtnClick() {
 
 void Setting::setDefaultClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   if (QMessageBox::question(
           this, "QFaktury GPL",
-          trUtf8("Czy napewno chcesz przywrócic ustawienia domyślne?"),
+          trUtf8("Czy napewno chcesz przywrócić ustawienia domyślne?"),
           QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
     return;
 
@@ -159,6 +175,8 @@ void Setting::setDefaultClick() {
  */
 
 void Setting::workingDirBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QString dir = QFileDialog::getExistingDirectory(
       this, tr("Open Directory"), "/home",
@@ -174,6 +192,8 @@ void Setting::workingDirBtnClick() {
 
 void Setting::addLogoBtnClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QString ofn = QFileDialog::getOpenFileName(
       this, trUtf8("Wybierz plik do wstawienia jako logo"), "",
       trUtf8("Obrazki (*.jpg *.png)"));
@@ -183,6 +203,8 @@ void Setting::addLogoBtnClick() {
 }
 
 void Setting::addStempBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QString ofn = QFileDialog::getOpenFileName(
       this, trUtf8("Wybierz plik do wstawienia jako pieczątka"), "",
@@ -194,6 +216,9 @@ void Setting::addStempBtnClick() {
 
 void Setting::helpFuncAddNr(QLineEdit *lineEd, QListWidget *listWg,
                             QString const &text) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   if (lineEd->text() != "") {
 
     listWg->addItem(lineEd->text());
@@ -209,6 +234,9 @@ void Setting::helpFuncAddNr(QLineEdit *lineEd, QListWidget *listWg,
 }
 
 void Setting::helpFuncDelNr(QListWidget *listWg, QString const &text) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   int selNr = listWg->currentRow();
   if (selNr >= 0) {
 
@@ -231,6 +259,8 @@ void Setting::helpFuncDelNr(QListWidget *listWg, QString const &text) {
 
 void Setting::currAddBtnClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   helpFuncAddNr(currEdit, currlBox,
                 trUtf8("Nie można dodać. Pole jest puste."));
 }
@@ -240,13 +270,17 @@ void Setting::currAddBtnClick() {
 
 void Setting::currDelBtnClick() {
 
-  helpFuncDelNr(currlBox, trUtf8("Musisz coś zaznaczyś, żeby usuwać."));
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
+  helpFuncDelNr(currlBox, trUtf8("Musisz coś zaznaczyć, żeby usuwać."));
 }
 
 /** Slot korekty reason add
  */
 
 void Setting::corAddBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   helpFuncAddNr(corEdit, correctsBox,
                 trUtf8("Nie można dodać. Pole jest puste."));
@@ -257,13 +291,17 @@ void Setting::corAddBtnClick() {
 
 void Setting::corDelBtnClick() {
 
-  helpFuncDelNr(correctsBox, trUtf8("Musisz coś zaznaczyś, żeby usuwać."));
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
+  helpFuncDelNr(correctsBox, trUtf8("Musisz coś zaznaczyć, żeby usuwać."));
 }
 
 /** Slot predefined VAT value add
  */
 
 void Setting::vatAddBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   helpFuncAddNr(vatEdit, vatlBox, trUtf8("Nie można dodać. Pole jest puste."));
 }
@@ -273,6 +311,8 @@ void Setting::vatAddBtnClick() {
 
 void Setting::vatDelBtnClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   helpFuncDelNr(vatlBox, trUtf8("Musisz coś zaznaczyć, żeby usuwać."));
 }
 
@@ -280,6 +320,9 @@ void Setting::vatDelBtnClick() {
  */
 
 void Setting::currencyAddBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   helpFuncAddNr(currencyEdit, currencylBox,
                 trUtf8("Nie można dodać. Pole jest puste."));
 }
@@ -288,6 +331,8 @@ void Setting::currencyAddBtnClick() {
  */
 void Setting::currencyDelBtnClick() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   helpFuncDelNr(currencylBox, trUtf8("Musisz coś zaznaczyś, żeby usuwać."));
 }
 
@@ -295,12 +340,16 @@ void Setting::currencyDelBtnClick() {
  */
 void Setting::paymDelBtnClick() {
 
-  helpFuncDelNr(paymlBox, trUtf8("Musisz coś zaznaczyś, żeby usuwać."));
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
+  helpFuncDelNr(paymlBox, trUtf8("Musisz coś zaznaczyć, żeby usuwać."));
 }
 
 /** Slot add payment type click
  */
 void Setting::paymAddBtnClick() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   helpFuncAddNr(paymEdit, paymlBox,
                 trUtf8("Nie można dodać. Pole jest puste."));
@@ -309,12 +358,15 @@ void Setting::paymAddBtnClick() {
 //----------------------- List box Slots END ---
 
 void Setting::helpFuncAp(QListWidget *listWg) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   int selNr = listWg->currentRow();
 
   if (selNr == 0) {
     QMessageBox::information(
         this, trUtf8("Uwaga!!"),
-        trUtf8("Nie można przenieść w górę, już jest najwyżej."),
+        trUtf8("Element znajduje się już na pierwszym miejscu na liście."),
         QMessageBox::Ok);
     return;
   }
@@ -338,6 +390,9 @@ void Setting::helpFuncAp(QListWidget *listWg) {
 }
 
 void Setting::helpFuncDown(QListWidget *listWg) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   int selNr = listWg->currentRow();
   int recCount = listWg->count();
   // qDebug() << selNr << recCount;
@@ -346,7 +401,7 @@ void Setting::helpFuncDown(QListWidget *listWg) {
 
     QMessageBox::information(
         this, trUtf8("Uwaga!!"),
-        trUtf8("Nie można przenieść w dół, już jest najniżej."),
+        trUtf8("Element znajduje się już na ostatnim miejscu na liście."),
         QMessageBox::Ok);
     return;
   }
@@ -374,26 +429,40 @@ void Setting::helpFuncDown(QListWidget *listWg) {
 /** Slot move VAT value up
  */
 
-void Setting::vatUpBtnClick() { helpFuncAp(vatlBox); }
+void Setting::vatUpBtnClick() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  helpFuncAp(vatlBox);
+}
 
 /** Slot move VAT value down
  */
 
-void Setting::vatDownBtnClick() { helpFuncDown(vatlBox); }
+void Setting::vatDownBtnClick() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  helpFuncDown(vatlBox);
+}
 
 /** Slot move payment value up
  */
-void Setting::paymUpBtnClick() { helpFuncAp(paymlBox); }
+void Setting::paymUpBtnClick() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  helpFuncAp(paymlBox);
+}
 
 /** Slot move payment value down
  */
-void Setting::paymDownBtnClick() { helpFuncDown(paymlBox); }
+void Setting::paymDownBtnClick() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  helpFuncDown(paymlBox);
+}
 
 //---------------------- UP DOWN SLOTS END----
 
 // ------------- SLOTS for items on the invoice START ----
 
 void Setting::getEncodings() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QHash<QString, QTextCodec *> codecMap;
   QRegExp iso8859RegExp("ISO[- ]8859-([0-9]+).*");
@@ -441,6 +510,9 @@ void Setting::getEncodings() {
  */
 
 QString Setting::getAll(QListWidget *lb) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QString tmp = QString();
   int selNr, posCount = lb->count();
 
@@ -459,6 +531,8 @@ QString Setting::getAll(QListWidget *lb) {
  */
 
 void Setting::saveSettings() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   sett().setValue("css", cssList->currentText());
   sett().setValue("style", stylesList->currentText());
@@ -492,6 +566,7 @@ void Setting::saveSettings() {
   sett().endGroup();
 
   sett().setValue("firstrun", false);
+  sett().setValue("firstRunGUS", false);
   sett().setValue("logo", logoEdit->text());
   sett().setValue("stempel", stempEdit->text());
   sett().setValue("units", getAll(currlBox));
@@ -537,6 +612,8 @@ void Setting::saveSettings() {
  */
 
 void Setting::readSettings() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   int curr = 0;
 
@@ -647,6 +724,8 @@ void Setting::readSettings() {
 // returns list of translations
 QStringList Setting::getTemplates() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QStringList templates = QStringList();
   QString path = QDir::currentPath() + "/templates/";
 
@@ -669,4 +748,7 @@ QStringList Setting::getTemplates() {
   return templates;
 }
 
-QStringList Setting::getStyles() { return QStyleFactory::keys(); }
+QStringList Setting::getStyles() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  return QStyleFactory::keys();
+}

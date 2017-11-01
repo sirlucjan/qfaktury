@@ -4,6 +4,12 @@ cmake_minimum_required(VERSION 2.8.12)
 set(QT_MIN_VERSION "5.0.0")
 set(KF5_MIN_VERSION "5.0.0")
 
+# Set project version
+set (QFAKTURY_VERSION_MAJOR "0")
+set (QFAKTURY_VERSION_MINOR "7")
+set (QFAKTURY_VERSION_MICRO "1")
+set (QFAKTURY_APPLICATIONS_VERSION "${QFAKTURY_VERSION_MAJOR}.${QFAKTURY_VERSION_MINOR}.${QFAKTURY_VERSION_MICRO}")
+
 find_package(ECM 1.7.0 REQUIRED CONFIG)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 set(CMAKE_AUTOMOC ON)
@@ -51,7 +57,10 @@ set( SOURCES
     src/Validations.cpp
     src/InvoiceRR.cpp
     src/Send.cpp
-    src/owncalendar.cpp
+    src/OwnCalendar.cpp
+    src/DeliveryNote.cpp
+    src/GoodsIssuedNotes.cpp
+    src/Warehouse.cpp
     src/SimpleSmtp_SSL_QT5/smtp_attachements/mainwindow.cpp
     src/SimpleSmtp_SSL_QT5/smtp_attachements/smtp.cpp
 )
