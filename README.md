@@ -139,7 +139,7 @@ Jeśli posiadasz Arch Linux bądź pokrewny system (Manjaro) możesz wykonać po
 
 ```
 git clone https://github.com/archlinux-lucjan/archlinux-poland.git
-cd qfaktury-qt5-git
+cd qfaktury-kf5-git
 makepkg -sric
 ```
 
@@ -154,7 +154,7 @@ W zbudowanym katalogu:
 
 lub (w Arch Linux), jeśli instalacja nastąpiła z PKGBUILD:
 
-`sudo pacman -Rns qfaktury-qt5-git`
+`sudo pacman -Rns qfaktury-kf5-git`
 
 <br/>
 <br/>
@@ -171,13 +171,17 @@ Program jest co jakiś czas uaktualniany. Plany jego rozbudowy, wykonane zadania
 
 ## Uwagi
 
-1. Osoby posiadające faktury, listy kontrahentów i towarów z wcześniejszych wersji (mniejszych niż 0.7.0), powinny wykonać kopię zapasową i skopiować je do katalogu "~/.local/share/data/elinux"
+1. Osoby posiadające faktury, listy kontrahentów i towarów z wcześniejszych wersji (mniejszych niż 0.7.0), powinny wykonać kopię zapasową i skopiować je do katalogu "~/.local/share/data/elinux".
 
 2. Osoby posiadające faktury z wcześniejszych commit'ów w razie jakichkolwiek niepoprawnych wyników mogą spróbować ponownie zapisać istniejąca fakturę, edytując ją, ponieważ możliwe, że dotychczasowe commit'y uwzględniają zauważone błędy i uzupełnią także pliki XML dodatkowymi danymi, które pozwolą korzystać z pełnej funkcjonalności programu. Zalecane jest także trzymać kopię zapasową plików w innym miejscu.
 
-3. Aktualizacja aktualnego kursu walut następuje co pół godziny, pod warunkiem połączenia z internetem oraz poprawnego ustawienia czasu systemowego
+3. Aktualizacja aktualnego kursu walut następuje co pół godziny, pod warunkiem połączenia z internetem oraz poprawnego ustawienia czasu systemowego.
 
-4. Portowanie na KF5 w trakcie
+4. Jeżeli jeszcze nie istnieje katalog "gus" w ścieżce "~/.local/share/data/elinux", zostaniesz poproszony o autoryzację wykonania skryptu, który przygotowuje plik php.ini do korzystania z klienta SOAP oraz pobiera zależności dla podprojektu bazującego na PHP do prawidłowego uruchomienia aplikacji w celu połączenia z Głównym Urzędem Statystycznym. Jeśli chcesz przygotować plik php.ini ręcznie, nie musisz instalować paczki gksu (tylko pamiętaj, by anulować prośbę o wykonanie konfiguracji PHP). Pierwsze połączenie trwa wiele dłużej z powodu generowania zależności i katalogów na przyszłe wykorzystanie.
+
+5. Jeśli nie chcesz używać danych z Głównego Urzędu Statystycznego, nie musisz instalować paczek gksu, beesu (Fedora) oraz php, ponieważ nie są one obligatoryjne do działania programu.
+
+6. Portowanie na KF5 w trakcie.
 
 
 <br/>
