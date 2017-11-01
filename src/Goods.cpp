@@ -12,6 +12,8 @@
 
 Goods::Goods(QWidget *parent, int mode, IDataLayer *dl) : QDialog(parent) {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   workMode = mode;
   dataLayer = dl;
 
@@ -24,6 +26,8 @@ Goods::Goods(QWidget *parent, int mode, IDataLayer *dl) : QDialog(parent) {
 
 void Goods::init() {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   selectData("", 0);
 
   jednCombo->addItems(sett().value("units").toString().split("|"));
@@ -33,12 +37,13 @@ void Goods::init() {
   connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
 
   /** Slot
-     *  Nett value changed
-     */
+   *  Nett value changed
+   */
 
   connect(
-      netEdit, static_cast<void (QDoubleSpinBox::*)(double)>(
-                   &QDoubleSpinBox::valueChanged),
+      netEdit,
+      static_cast<void (QDoubleSpinBox::*)(double)>(
+          &QDoubleSpinBox::valueChanged),
       [this](double) { net[spinBox2->value() - 1] = netEdit->cleanText(); });
 
   /** Slot
@@ -58,7 +63,10 @@ void Goods::init() {
   });
 }
 
-const QString Goods::getRetGoods() { return ret; }
+const QString Goods::getRetGoods() {
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+  return ret;
+}
 
 /******************** SLOTS START ***************************/
 
@@ -68,17 +76,16 @@ const QString Goods::getRetGoods() { return ret; }
 
 void Goods::okClick() {
 
-  if (sett().value("validation").toBool()) {
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
 
-    if (Validations::instance()->isEmptyField(nameEdit->text(),
-                                              textLabel3->text()))
+  if (Validations::instance()->isEmptyField(nameEdit->text(),
+                                            textLabel3->text()))
+    return;
+
+  if (!pkwiuEdit->text().isEmpty()) {
+
+    if (!Validations::instance()->validatePkwiu(pkwiuEdit->text()))
       return;
-
-    if (!pkwiuEdit->text().isEmpty()) {
-
-      if (!Validations::instance()->validatePkwiu(pkwiuEdit->text()))
-        return;
-    }
   }
 
   QStringList listRet =
@@ -113,6 +120,8 @@ void Goods::okClick() {
 // helper method which sets "-" in input forms
 QString Goods::isEmpty(QString in) {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   if (in == "")
     return " ";
   return in;
@@ -124,6 +133,8 @@ QString Goods::isEmpty(QString in) {
  */
 
 void Goods::selectData(QString idx, int type) {
+
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
 
   if (idx == "") {
 
@@ -157,6 +168,8 @@ void Goods::selectData(QString idx, int type) {
 
 bool Goods::insertData() {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   ProductData prodData;
   setData(prodData);
   dataLayer->productsInsertData(prodData, typeCombo->currentIndex());
@@ -169,6 +182,8 @@ bool Goods::insertData() {
 
 bool Goods::updateData() {
 
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
+
   ProductData prodData;
   setData(prodData);
   dataLayer->productsUpdateData(prodData, typeCombo->currentIndex(),
@@ -180,6 +195,8 @@ bool Goods::updateData() {
  */
 
 void Goods::getData(ProductData prodData) {
+
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
 
   idxEdit->setText(QString::number(prodData.id));
   nameEdit->setText(prodData.name);
@@ -204,6 +221,8 @@ void Goods::getData(ProductData prodData) {
  */
 
 void Goods::setData(ProductData &prodData) {
+
+  qDebug() << __FILE__ << __LINE__ << __FUNCTION__;
 
   prodData.id = idxEdit->text().toInt();
   prodData.name = nameEdit->text();

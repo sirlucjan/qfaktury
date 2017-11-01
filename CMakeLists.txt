@@ -4,12 +4,18 @@ cmake_minimum_required(VERSION 2.8.12)
 set(QT_MIN_VERSION "5.0.0")
 set(KF5_MIN_VERSION "5.0.0")
 
+# Set project version
+set (QFAKTURY_VERSION_MAJOR "0")
+set (QFAKTURY_VERSION_MINOR "7")
+set (QFAKTURY_VERSION_MICRO "1")
+set (QFAKTURY_APPLICATIONS_VERSION "${QFAKTURY_VERSION_MAJOR}.${QFAKTURY_VERSION_MINOR}.${QFAKTURY_VERSION_MICRO}")
+
 find_package(ECM 1.7.0 REQUIRED CONFIG)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Werror -Wall -Wextra -Wno-unused-parameter -pedantic -std=c++0x")
 
 message(STATUS "${CMAKE_MODULE_PATH}")
 
@@ -18,6 +24,11 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 include(FeatureSummary)
+
+# Set cmake policy for hiding inlines
+# We just use these for compiling tests, so it doesn't really
+# effect us, but this removes the error
+cmake_policy(SET CMP0063 NEW)
 
 
 find_package( Qt5 REQUIRED COMPONENTS Gui Core Widgets PrintSupport Xml WebEngineWidgets Network )
@@ -51,7 +62,10 @@ set( SOURCES
     src/Validations.cpp
     src/InvoiceRR.cpp
     src/Send.cpp
-    src/owncalendar.cpp
+    src/OwnCalendar.cpp
+    src/DeliveryNote.cpp
+    src/GoodsIssuedNotes.cpp
+    src/Warehouse.cpp
     src/SimpleSmtp_SSL_QT5/smtp_attachements/mainwindow.cpp
     src/SimpleSmtp_SSL_QT5/smtp_attachements/smtp.cpp
 )

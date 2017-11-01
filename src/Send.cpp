@@ -1,3 +1,11 @@
+#include "Send.h"
+#include "Buyers.h"
+#include "Const.h"
+#include "ConvertAmount.h"
+#include "IDataLayer.h"
+#include "Invoice.h"
+#include "InvoiceData.h"
+
 #include <QCheckBox>
 #include <QDomDocument>
 #include <QFile>
@@ -14,17 +22,12 @@
 #include <QWizard>
 #include <QWizardPage>
 
-#include "Buyers.h"
-#include "Const.h"
-#include "ConvertAmount.h"
-#include "IDataLayer.h"
-#include "Invoice.h"
-#include "InvoiceData.h"
-#include "Send.h"
-
 Send::Send(QVector<BuyerData> buyersList, QVector<InvoiceData> invList,
            QWidget *parent)
     : QWizard(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   bList = buyersList;
   iList = invList;
   addPage(new IntroPage);
@@ -40,6 +43,9 @@ void Send::accept() { QDialog::accept(); }
 
 // First page of QWizard with Intro
 IntroPage::IntroPage(QWidget *parent) : QWizardPage(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   setTitle(trUtf8("Wprowadzenie"));
 
   label =
@@ -59,6 +65,9 @@ ClassInvoicePage::ClassInvoicePage(QVector<BuyerData> buyList,
                                    QVector<InvoiceData> invList,
                                    QWidget *parent)
     : QWizardPage(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   setTitle(tr("Wybieranie danych"));
   setSubTitle(tr("Wybierz jednego z kontrahentów oraz fakturę jako załącznik"));
   bList = buyList;
@@ -103,6 +112,8 @@ ClassInvoicePage::ClassInvoicePage(QVector<BuyerData> buyList,
 // otherwise, the current page stays up." From
 // http://doc.qt.io/qt-5/qwizardpage.html#validatePage
 bool ClassInvoicePage::validatePage() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   // extra for registerField. See table on
   // http://doc.qt.io/qt-5/qwizardpage.html#registerField
@@ -234,6 +245,9 @@ bool ClassInvoicePage::validatePage() {
 
 // transform short types to normal text for email message
 QString ClassInvoicePage::transformType(QString text) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   if (text == "FVAT")
     return s_INVOICE;
   if (text == "FPro")
@@ -256,6 +270,9 @@ QString ClassInvoicePage::transformType(QString text) {
 
 // Third page for helping choice of host and protocol for email account
 EmailPage::EmailPage(QWidget *parent) : QWizardPage(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   setTitle(tr("Generowanie host"));
   setSubTitle(tr(
       "Wybierz swój host po lewej stronie poniżej, do którego należy twoja "
@@ -393,6 +410,8 @@ EmailPage::EmailPage(QWidget *parent) : QWizardPage(parent) {
 // what's going on before page is shown
 void EmailPage::initializePage() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = false;
   protocol = QString();
   checkedMail = QString();
@@ -403,6 +422,8 @@ void EmailPage::initializePage() {
 // checked
 void EmailPage::setHostPort(QString checked, QString protocol) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   if (checked == "Gmail") {
     edit1->setText("smtp.gmail.com");
 
@@ -411,9 +432,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "Onet") {
@@ -424,9 +446,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "o2") {
@@ -437,9 +460,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "Interia") {
@@ -450,9 +474,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "WP") {
@@ -463,9 +488,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "Yahoo") {
@@ -476,9 +502,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL lub TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL lub TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "Outlook") {
@@ -487,9 +514,10 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     if (protocol == "SSL") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół TLS lub TCP.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół TLS lub TCP.");
     } else if (protocol == "TCP")
       edit2->setText("25");
     else if (protocol == "TLS")
@@ -509,15 +537,17 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     if (protocol == "SSL") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół TLS.");
     } else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   } else if (checked == "Gazeta") {
@@ -528,15 +558,17 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL.");
     } else if (protocol == "TLS") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół SSL.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół SSL.");
     }
   } else if (checked == "HotMail (stare serwery)") {
     edit1->setText("smtp.live.com");
@@ -544,21 +576,25 @@ void EmailPage::setHostPort(QString checked, QString protocol) {
     if (protocol == "SSL") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół TLS.");
     } else if (protocol == "TCP") {
       this->protocol = "";
       edit2->setText("");
-      QMessageBox::information(this, "Protokół", "Do wysłania wiadomości z tej "
-                                                 "skrzynki pocztowej wybierz "
-                                                 "protokół TLS.");
+      QMessageBox::information(this, "Protokół",
+                               "Do wysłania wiadomości z tej "
+                               "skrzynki pocztowej wybierz "
+                               "protokół TLS.");
     } else if (protocol == "TLS")
       edit2->setText("587");
   }
 }
 
 void EmailPage::setSSL(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   if (!checkedMailButton)
     QMessageBox::warning(
@@ -572,6 +608,8 @@ void EmailPage::setSSL(bool) {
 
 void EmailPage::setTCP(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   if (!checkedMailButton)
     QMessageBox::warning(
         this, "Zaznaczenie skrzynki pocztowej",
@@ -583,6 +621,8 @@ void EmailPage::setTCP(bool) {
 }
 
 void EmailPage::setTLS(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   if (!checkedMailButton)
     QMessageBox::warning(
@@ -596,6 +636,8 @@ void EmailPage::setTLS(bool) {
 
 void EmailPage::setGmail(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "Gmail";
   if (checkedPortButton)
@@ -603,6 +645,8 @@ void EmailPage::setGmail(bool) {
 }
 
 void EmailPage::setOnet(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   checkedMailButton = true;
   checkedMail = "Onet";
@@ -612,6 +656,8 @@ void EmailPage::setOnet(bool) {
 
 void EmailPage::seto2(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "o2";
   if (checkedPortButton)
@@ -619,6 +665,8 @@ void EmailPage::seto2(bool) {
 }
 
 void EmailPage::setInteria(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   checkedMailButton = true;
   checkedMail = "Interia";
@@ -628,6 +676,8 @@ void EmailPage::setInteria(bool) {
 
 void EmailPage::setWP(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "WP";
   if (checkedPortButton)
@@ -635,6 +685,8 @@ void EmailPage::setWP(bool) {
 }
 
 void EmailPage::setYahoo(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   checkedMailButton = true;
   checkedMail = "Yahoo";
@@ -644,6 +696,8 @@ void EmailPage::setYahoo(bool) {
 
 void EmailPage::setHotMail(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "HotMail (stare serwery)";
   if (checkedPortButton)
@@ -651,6 +705,8 @@ void EmailPage::setHotMail(bool) {
 }
 
 void EmailPage::setGazeta(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   checkedMailButton = true;
   checkedMail = "Gazeta";
@@ -660,6 +716,8 @@ void EmailPage::setGazeta(bool) {
 
 void EmailPage::setAol(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "Aol";
   if (checkedPortButton)
@@ -667,6 +725,8 @@ void EmailPage::setAol(bool) {
 }
 
 void EmailPage::setFoxMail(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   checkedMailButton = true;
   checkedMail = "Foxmail / QQMail";
@@ -676,6 +736,8 @@ void EmailPage::setFoxMail(bool) {
 
 void EmailPage::setOutlook(bool) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   checkedMailButton = true;
   checkedMail = "Outlook";
   if (checkedPortButton)
@@ -684,6 +746,8 @@ void EmailPage::setOutlook(bool) {
 
 // Last page with email form, where some informations are ready in QLineEdits
 ConclusionPage::ConclusionPage(QWidget *parent) : QWizardPage(parent) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   setTitle(tr("Wprowadzanie danych"));
   setSubTitle(tr("Wybierz jeden z szablonów do wygenerowania"
@@ -708,6 +772,8 @@ ConclusionPage::ConclusionPage(QWidget *parent) : QWizardPage(parent) {
 // what's going on before last page is shown. Preparing...
 void ConclusionPage::initializePage() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   emailWindow->setServerName(field("host").toString());
   emailWindow->setPortNumber(field("port").toString());
   emailWindow->setRecipMail(field("emailData").toString());
@@ -722,6 +788,9 @@ void ConclusionPage::initializePage() {
 }
 
 void ConclusionPage::getTemplateOne(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QDir allFiles;
   allFiles.setPath(sett().getPdfDir());
   allFiles.setFilter(QDir::Files);
@@ -757,6 +826,9 @@ void ConclusionPage::getTemplateOne(bool) {
 }
 
 void ConclusionPage::getTemplateTwo(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QDir allFiles;
   allFiles.setPath(sett().getPdfDir());
   allFiles.setFilter(QDir::Files);
@@ -785,8 +857,9 @@ void ConclusionPage::getTemplateTwo(bool) {
       "niniejszego pisma wyżej wymienionych kwot wraz z odsetkami za "
       "opóźnienie w płatności każdej z faktur.\n\n"
       "Wpłaty prosimy dokonać na podany niżej rachunek bankowy:\n\n" +
-      settings.value("account").toString() + "\n\n"
-                                             "Pozdrawiamy, \n" +
+      settings.value("account").toString() +
+      "\n\n"
+      "Pozdrawiamy, \n" +
       settings.value("name").toString());
 
   emailWindow->removeLastFile(plik->fileName());
@@ -796,6 +869,8 @@ void ConclusionPage::getTemplateTwo(bool) {
 }
 
 void ConclusionPage::getTemplateThree(bool) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QDir allFiles;
   allFiles.setPath(sett().getPdfDir());
@@ -824,15 +899,17 @@ void ConclusionPage::getTemplateThree(bool) {
       " ) wraz z odsetkami za opóźnienie w płatnościach. \n"
       "Powyższa należność wynika z następujących faktur: \n\n" +
       field("invtypeData").toString() + " Nr. " +
-      field("symbolData").toString() + "\n\n"
-                                       "Podaną wyżej kwotę prosimy wpłacić na "
-                                       "podany niżej rachunek bankowy:\n\n" +
+      field("symbolData").toString() +
+      "\n\n"
+      "Podaną wyżej kwotę prosimy wpłacić na "
+      "podany niżej rachunek bankowy:\n\n" +
       settings.value("bank").toString() + "\n" +
-      settings.value("account").toString() + "\n\n"
-                                             "Prosimy traktować niniejsze "
-                                             "pismo jako ostateczne wezwanie "
-                                             "przedprocesowe.\n\n"
-                                             "Pozdrawiamy, \n" +
+      settings.value("account").toString() +
+      "\n\n"
+      "Prosimy traktować niniejsze "
+      "pismo jako ostateczne wezwanie "
+      "przedprocesowe.\n\n"
+      "Pozdrawiamy, \n" +
       settings.value("name").toString());
 
   emailWindow->removeLastFile(plik->fileName());

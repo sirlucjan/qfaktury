@@ -1,3 +1,4 @@
+
 #include "detector.h"
 #if _pragma_once_support
 #pragma once
@@ -7,9 +8,13 @@
 
 #include "ui_Buyers.h"
 
+#include <QStringList>
+
 class IDataLayer;
 class BuyerData;
+class QJsonValue;
 
+// class for setting your data as company with GUI
 class Buyers : public QDialog, public Ui::Buyers {
 
   Q_OBJECT
@@ -20,12 +25,17 @@ public:
                   int type); // 0 - company, 1 - department, 2 - natural person
   bool insertData();
   bool updateData();
-  const QString getRetBuyer();
+  const QString getRetBuyer(); // gets variable in string format, that holds
+                               // information for table rows (for example: "id |
+                               // name | tic" etc)
 
 public slots:
 
   void okClick();
   void requiredTic(int);
+
+private slots:
+  void on_gusBtn_clicked();
 
 private:
   QStringList allNames;
@@ -39,5 +49,11 @@ private:
   void setData(BuyerData &buyerData);
   bool validate();
   bool validateUpdated();
+  bool connectGUS();
+  bool checkGusPath();
+  void setDataFromGUS();
+  void RaportTypesContainer(QStringList&, QJsonObject&);
+  void createComposerJson(QString,QString);
+
 };
 #endif

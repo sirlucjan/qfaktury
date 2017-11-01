@@ -1,10 +1,4 @@
-
-#include <QKeyEvent>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QPrintPreviewDialog>
-#include <QPrinter>
-
+#include "Invoice.h"
 #include "Buyers.h"
 #include "BuyersList.h"
 #include "ChangeAmount.h"
@@ -13,8 +7,13 @@
 #include "CustomPayment.h"
 #include "GoodsList.h"
 #include "IDataLayer.h"
-#include "Invoice.h"
 #include "MainWindow.h"
+
+#include <QKeyEvent>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QPrintPreviewDialog>
+#include <QPrinter>
 
 short invType;
 Invoice *Invoice::m_instance = nullptr;
@@ -27,36 +26,41 @@ Invoice::Invoice(QWidget *parent, IDataLayer *dl, QString Inv)
   setupUi(this);
 
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   m_instance = this;
   dataLayer = dl;
   pforma = false;
   kAdded = false;
   konvEUR->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
   konvPLN->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
   konvUSD->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
   konvCHF->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
   konvGBP->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
   konvRUB->setToolTip(trUtf8("Zamienia wartości liczbowe na fakturze na "
                              "zaznaczone według aktualnego kursu walut, o ile "
-                             "się różni wyboru waluty z listy obok."));
+                             "się różni wybór waluty z listy obok."));
 
   init();
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 }
 
 /** Destructor
  */
 
 Invoice::~Invoice() {
+
+  qDebug() << __FUNCTION__ << __LINE__ << __FILE__;
 
   m_instance = nullptr;
   delete reply;
@@ -85,11 +89,16 @@ Invoice::~Invoice() {
   if (sendKindInfo != 0)
     sendKindInfo = 0;
   delete sendKindInfo;
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 }
 
 Invoice *Invoice::instance() { return m_instance; }
 
 QString const Invoice::getRet() { return ret; }
+
+QString const Invoice::getRetWarehouse() { return retWarehouse; }
 
 QString const Invoice::getfName() { return fName; }
 
@@ -97,7 +106,7 @@ void Invoice::setfName(QString text) { fName = text; }
 
 QString const Invoice::getInvForm() { return inv_form; }
 
-bool const Invoice::getKAdded() { return kAdded; }
+bool Invoice::getKAdded() const { return kAdded; }
 
 /** Init method
  */
@@ -105,6 +114,7 @@ bool const Invoice::getKAdded() { return kAdded; }
 void Invoice::init() {
 
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   reply = 0;
   manager = 0;
   ratesCombo = new QComboBox();
@@ -133,6 +143,8 @@ void Invoice::init() {
   whatTypeFromTitle(s_DUPLICATE, false, true, DUP, 7);
   whatTypeFromTitle(s_WIN_DUPLICATE_LOOK, false, true, DUP, 7);
   whatTypeFromTitle(s_RR, false, false, RR, 8);
+  whatTypeFromTitle(s_WZ, false, false, WZ, 9);
+  whatTypeFromTitle(s_RW, false, false, RW, 10);
 
   if (sett().value("editSymbol").toBool())
     invNr->setEnabled(false);
@@ -191,6 +203,7 @@ void Invoice::init() {
   connect(constRab, SIGNAL(stateChanged(int)), this,
           SLOT(discountConstChange()));
   connect(addBuyerBtn, SIGNAL(clicked()), this, SLOT(buyerClick()));
+
   connect(konvUSD, &QPushButton::clicked,
           [this]() { convertCurrShort(konvUSD->text().trimmed()); });
 
@@ -212,6 +225,7 @@ void Invoice::init() {
   connect(konvRUB, &QPushButton::clicked, [this]() {
     convertCurrShort(konvRUB->text().replace("&", "").trimmed());
   });
+
   connect(ratesCombo, SIGNAL(currentIndexChanged(QString)), this,
           SLOT(rateDateChanged(QString)));
 
@@ -246,10 +260,16 @@ void Invoice::init() {
   discountVal->setEnabled(false);
 
   canClose = true;
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 }
 
 void Invoice::whatTypeFromTitle(QString title, bool ifForm, bool kadded,
                                 InvoiceType invTyp, int numbType) {
+
+  qDebug() << __FUNCTION__ << __LINE__ << __FILE__;
+
   if (inv_form == title) {
 
     pforma = ifForm;
@@ -257,6 +277,9 @@ void Invoice::whatTypeFromTitle(QString title, bool ifForm, bool kadded,
     invType = invTyp;
     type = numbType;
   }
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 }
 
 /**
@@ -284,6 +307,12 @@ QString Invoice::getInvoiceTypeAndSaveNr() {
   } else if (inv_form == s_RR) {
     ret = trUtf8("rr");
     sett().setValue("rr", invNr->text());
+  } else if (inv_form == s_WZ) {
+    ret = trUtf8("wz");
+    sett().setValue("wz", invNr->text());
+  } else if (inv_form == s_RW) {
+    ret = trUtf8("rw");
+    sett().setValue("rw", invNr->text());
   }
 
   return ret;
@@ -333,6 +362,7 @@ void Invoice::connectedWebsite(const QUrl &webExchRate) {
 }
 
 void Invoice::httpReadyRead() {
+
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   if (file.exists()) {
@@ -341,6 +371,7 @@ void Invoice::httpReadyRead() {
 }
 
 void Invoice::tellFinished() {
+
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   if (file.open(QIODevice::ReadOnly)) {
@@ -461,6 +492,8 @@ is first argument, that is the our main language
 void Invoice::algorithmCurrencies(QString mainEl, QStringList list,
                                   QMap<QString, double> &mappedList) {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   QStringList::const_iterator constIterator;
   QStringList::const_iterator constIteratorDepth;
 
@@ -483,10 +516,9 @@ void Invoice::algorithmCurrencies(QString mainEl, QStringList list,
       if ((*constIterator).toLocal8Bit().constData() == mainEl) {
 
         double result =
-            1 /
-            mappedList.value(
-                QString((*constIteratorDepth).toLocal8Bit().constData()) + "/" +
-                QString((*constIterator).toLocal8Bit().constData()));
+            1 / mappedList.value(
+                    QString((*constIteratorDepth).toLocal8Bit().constData()) +
+                    "/" + QString((*constIterator).toLocal8Bit().constData()));
 
         mappedList.insert(desc, result);
 
@@ -541,6 +573,7 @@ QMap<QString, double> Invoice::tableOfValues() {
 }
 
 bool Invoice::ifUpdated() {
+
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   if (!file.open(QIODevice::ReadOnly)) {
@@ -611,9 +644,15 @@ bool Invoice::ifUpdated() {
   return true;
 }
 
-QString Invoice::checkInvCurr() { return currCombo->currentText().trimmed(); }
+QString Invoice::checkInvCurr() {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  return currCombo->currentText().trimmed();
+}
 
 bool Invoice::convWarn() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   bool whatToDo = false;
 
   if (tableGoods->rowCount() == 0) {
@@ -623,7 +662,7 @@ bool Invoice::convWarn() {
     msgBox.setText(trUtf8("Aby zmienić walutę, powinieneś dodać co najmniej "
                           "jeden towar lub usługę"));
     msgBox.setInformativeText(
-        trUtf8("Chcesz dodać towar lub usługę czy wrócić do głównego okna?"));
+        trUtf8("Chcesz dodać towar lub usługę, czy wrócić do głównego okna?"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Ok);
@@ -645,9 +684,9 @@ bool Invoice::convWarn() {
 
 void Invoice::convertCurrShort(QString btnText) {
 
-  if (!convWarn()) {
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
-    qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  if (!convWarn()) {
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
@@ -708,12 +747,14 @@ void Invoice::convertCurrShort(QString btnText) {
 // --//////////////////////////////////////////////////////////////////////////////////
 
 const QString Invoice::pressedTxt() {
+
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   return pressedText;
 }
 
 void Invoice::calcAll(const double &currVal) {
+
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   double res1 = 0;
@@ -1065,8 +1106,8 @@ void Invoice::backBtnClick() {
 
   QString prefix, suffix;
   prefix = sett().value("prefix").toString();
-
   int nr = MainWindow::instance()->getMaxSymbol() + 1;
+
   lastInvoice =
       prefix + numbersCount(nr, sett().value("chars_in_symbol").toInt());
 
@@ -1086,6 +1127,7 @@ void Invoice::backBtnClick() {
   suffix = sett().value("sufix").toString();
   lastInvoice += suffix;
   invNr->setText(lastInvoice);
+
   saveBtn->setEnabled(true);
 }
 
@@ -1109,8 +1151,8 @@ void Invoice::canQuit() {
 
     if (QMessageBox::warning(
             this, "QFaktury",
-            trUtf8("Dane zostały zmienione czy chcesz zapisać?"), trUtf8("Tak"),
-            trUtf8("Nie"), 0, 0, 1) == 1) {
+            trUtf8("Dane zostały zmienione. Czy chcesz zapisać?"),
+            trUtf8("Tak"), trUtf8("Nie"), 0, 0, 1) == 1) {
       saveColumnsWidth();
       reject();
 
@@ -1306,7 +1348,7 @@ void Invoice::dateChanged(QDate) {
     QMessageBox::information(
         this, trUtf8("Błędne ustawienie daty"),
         trUtf8("Data wystawienia faktury nie może być wcześniejsza od daty "
-               "sprzedaży towaru lub wykonania usługi"));
+               "sprzedaży towaru lub wykonania usługi."));
     productDate->setDate(sellingDate->date());
 
   } else {
@@ -1634,7 +1676,7 @@ bool Invoice::saveInvoice() {
   if (!result) {
     QMessageBox::warning(
         this, trUtf8("Zapis faktury"),
-        trUtf8("Zapis faktury zakończył się niepowodzeniem. Sprawdź czy masz "
+        trUtf8("Zapis faktury zakończył się niepowodzeniem. Sprawdź, czy masz "
                "uprawnienia do zapisu lub odczytu w ścieżce ") +
             sett().getInvoicesDir() + trUtf8(" oraz czy ścieżka istnieje."));
   }
@@ -1793,7 +1835,7 @@ void Invoice::print() {
           trUtf8("Prawdopobnie nie masz skonfigurowanej lub podłączonej "
                  "drukarki. Wykrywana nazwa domyślnej drukarki to: ") +
               printer.printerName() +
-              trUtf8(". Status domyślnej drukarki (poprawny o ile drukarka ma "
+              trUtf8(". Status domyślnej drukarki (poprawny, o ile drukarka ma "
                      "możliwość raportowania statusu do systemu): ") +
               printer.printerState());
     }
@@ -1818,10 +1860,10 @@ bool Invoice::validateForm() {
 
     QMessageBox msgBox;
     msgBox.setText(trUtf8("Aby zapisać fakturę, powinieneś dodać co najmniej "
-                          "jednego kontrahenta"));
+                          "jednego kontrahenta."));
     msgBox.setInformativeText(
-        trUtf8("Jeśli chcesz dodać kontrahenta, wciśnij - OK. Jeśli chcesz "
-               "wrócić do głównego okna, wciśnij - Anuluj"));
+        trUtf8("Jeśli chcesz dodać kontrahenta, wybierz - OK. Jeśli chcesz "
+               "wrócić do głównego okna, wybierz - Anuluj."));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Ok);
@@ -1845,10 +1887,10 @@ bool Invoice::validateForm() {
 
     QMessageBox msgBox;
     msgBox.setText(trUtf8("Aby zapisać fakturę, powinieneś dodać co najmniej "
-                          "jeden towar lub usługę"));
+                          "jeden towar lub usługę."));
     msgBox.setInformativeText(
-        trUtf8("Jeśli chcesz dodać towar lub usługę, wciśnij - OK. Jeśli "
-               "chcesz wrócić do głównego okna, wciśnij - Anuluj"));
+        trUtf8("Jeśli chcesz dodać towar lub usługę, wybierz - OK. Jeśli "
+               "chcesz wrócić do głównego okna, wybierz - Anuluj."));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Ok);
@@ -1876,6 +1918,8 @@ bool Invoice::validateForm() {
 // Generate Invoice HTML methods --- START ---
 
 void Invoice::makeInvoiceHeadarHTML() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   invStrList += "<html><head>";
   invStrList += "<meta http-equiv=\"Content-Type\" content=\"text/html; "
@@ -1937,6 +1981,8 @@ void Invoice::makeInvoiceHeadarHTML() {
 }
 
 void Invoice::makeInvoiceHeadar(bool sellDate, bool breakPage, bool original) {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   QString breakPageStr = "class=\"page_break\"";
   if (breakPage == false)
@@ -2033,6 +2079,8 @@ void Invoice::makeInvoiceHeadar(bool sellDate, bool breakPage, bool original) {
 }
 
 void Invoice::makeInvoiceBody() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   invStrList += "<tr width=\"100%\"><td width=\"100%\">";
   invStrList += "<table width=\"100%\" border=\"0\">";
@@ -2170,6 +2218,8 @@ void Invoice::makeInvoiceBody() {
 
 void Invoice::makeInvoiceProductsHeadar() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   invStrList += "<tr align=\"center\" valign=\"middle\" "
                 "class=\"productsHeader\" width=\"100%\" >"; // TUTAJ
 
@@ -2268,6 +2318,8 @@ void Invoice::makeInvoiceProductsHeadar() {
 
 void Invoice::makeInvoiceProducts() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   invStrList += "<tr width=\"100%\"><td width=\"100%\">";
 
   invStrList += "<table border=\"2\" align=\"right\" cellspacing=\"0\" "
@@ -2350,6 +2402,8 @@ void Invoice::makeInvoiceProducts() {
 
 void Invoice::makeInvoiceSumm() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   double vatPrice =
       sett().stringToDouble(sum3->text()) - sett().stringToDouble(sum1->text());
   invStrList += "<tr width=\"100%\"><td width=\"100%\">";
@@ -2362,7 +2416,7 @@ void Invoice::makeInvoiceSumm() {
                   "cellpadding=\"5\">";
   }
   invStrList +=
-      "<tr class=\"productsSumHeader\" valign=\"middle\ width=\"100%\">";
+      "<tr class=\"productsSumHeader\" valign=\"middle\" width=\"100%\">";
   invStrList +=
       "<td id=\"notNec\" width=\"10%\" align=\"center\">&nbsp;</td>"; // TUTAJ
   invStrList += "<td width=\"11%\" align=\"center\">" +
@@ -2382,6 +2436,8 @@ void Invoice::makeInvoiceSumm() {
 }
 
 void Invoice::makeInvoiceSummAll() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   invStrList += "</td></tr>"; // closing products row
   invStrList += "<table width=\"100%\" border=\"0\">";
@@ -2481,6 +2537,8 @@ void Invoice::makeInvoiceSummAll() {
 
 void Invoice::makeInvoiceFooter() {
 
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   invStrList += "<tr comment=\"podpis\" align=\"center\"><td>";
   invStrList += "<br><br><br><br>";
   invStrList += "<table width=\"80%\" border=\"0\">";
@@ -2514,6 +2572,8 @@ void Invoice::makeInvoiceFooter() {
 }
 
 void Invoice::makeInvoiceFooterHtml() {
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
   invStrList += "</body>";
   invStrList += "</html>";
@@ -2578,6 +2638,7 @@ QString Invoice::getGroupedSums() {
 void Invoice::readData(QString fraFile) {
 
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+
   prepayFile = fraFile;
   qDebug() << "prepayFile w readData: " << prepayFile;
   backBtn->setEnabled(false);
@@ -2729,16 +2790,15 @@ void Invoice::calculateSum() {
 
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
 
-  double net = 0, price = 0, gross = 0;
+  double net = 0;
   double discountValue = 0;
+  double gross = 0;
 
   nettTotal = 0;
   discountTotal = 0;
   grossTotal = 0;
 
   for (int i = 0; i < tableGoods->rowCount(); ++i) {
-
-    price = sett().stringToDouble(tableGoods->item(i, 7)->text());
 
     double decimalPointsNetto =
         tableGoods->item(i, 8)->text().right(2).toInt() * 0.01;
@@ -2774,6 +2834,8 @@ void Invoice::calculateSum() {
 QString Invoice::numbersCount(int in, int x) {
 
   qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__;
+  qDebug() << "nr: " << in;
+  qDebug() << "sett().value(\"chars_in_symbol\")" << x;
 
   QString tmp2, tmp = sett().numberToString(in);
   tmp2 = "";
@@ -2781,6 +2843,9 @@ QString Invoice::numbersCount(int in, int x) {
 
   for (int i = 0; i < incr; ++i)
     tmp2 += "0";
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 
   return tmp2 + tmp;
 }
@@ -2799,4 +2864,7 @@ void Invoice::saveColumnsWidth() {
                     tableGoods->columnWidth(i));
 
   sett().endGroup();
+
+  qDebug() << "[" << __FILE__ << ": " << __LINE__ << "] " << __FUNCTION__
+           << "EXIT";
 }

@@ -28,6 +28,13 @@
       <Action name="invoiceEdAction" />
       <Action name="sendEmailAction" />
     </Menu >
+    <Menu name="warehouseMenu">
+      <text>M&amp;agazyn</text>
+      <Action name="WZAction" />
+      <Action name="RWAction" />
+      <Action name="warehouseEdAction" />
+      <Action name="warehouseDelAction" />
+    </Menu >
     <Menu name="buyersAct">
         <text>K&amp;ontrahenci</text>
         <Action name="Dodaj kontrahenta" />
